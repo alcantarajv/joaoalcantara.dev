@@ -1,0 +1,57 @@
+/*
+ * Tokens de design: a única fonte de cores, fontes e medidas do site.
+ * Valores portados de referencia-design.html.
+ *
+ * Tema: segue prefers-color-scheme por padrão. O atributo data-theme no <html>
+ * (definido pelo botão de tema) força um dos dois.
+ */
+
+:root {
+  color-scheme: light;
+
+  --ground:      #FAFAF7;
+  --surface:     #F1F0EA;
+  --ink:         #15171B;
+  --muted:       #5B6068;
+  --faint:       #8A8F97;
+  --rule:        #DEDCD4;
+  --accent:      #8A5D10;
+  --accent-soft: #F0E4C9;
+
+  --display: "Bricolage Grotesque Variable", "Trebuchet MS", sans-serif;
+  --body:    "IBM Plex Sans Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono:    "IBM Plex Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+
+  --measure: 64ch;
+  --content-width: 860px;
+}
+
+/* Escuro pelo sistema, a menos que o visitante tenha escolhido o claro. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --ground:      #131519;
+    --surface:     #1A1D23;
+    --ink:         #E9E8E3;
+    --muted:       #9DA2AA;
+    --faint:       #6E747D;
+    --rule:        #292D34;
+    --accent:      #D9A950;
+    --accent-soft: #2E2718;
+  }
+}
+
+/* Escuro escolhido pelo botão, independente do sistema. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --ground:      #131519;
+  --surface:     #1A1D23;
+  --ink:         #E9E8E3;
+  --muted:       #9DA2AA;
+  --faint:       #6E747D;
+  --rule:        #292D34;
+  --accent:      #D9A950;
+  --accent-soft: #2E2718;
+}

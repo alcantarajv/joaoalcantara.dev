@@ -1,0 +1,43 @@
+---
+// Fontes servidas pelo próprio site (sem Google Fonts).
+// Bricolage: eixos de peso e de tamanho óptico, como na referência.
+import '@fontsource-variable/bricolage-grotesque/opsz.css';
+import '@fontsource-variable/ibm-plex-sans/wght.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+
+import '../styles/tokens.css';
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+
+		{/*
+			Aplica o tema escolhido antes da primeira pintura, para não haver flash.
+			Precisa ser inline e síncrono: um script externo ou type="module" rodaria tarde demais.
+		*/}
+		<script is:inline>
+			try {
+				var tema = localStorage.getItem('theme');
+				if (tema === 'dark' || tema === 'light') {
+					document.documentElement.setAttribute('data-theme', tema);
+				}
+			} catch (e) {}
+		</script>
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>

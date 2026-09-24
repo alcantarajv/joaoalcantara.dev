@@ -1,16 +1,13 @@
 ---
-
+// Página provisória para conferir tokens, fontes e tema. Substituída na Etapa 3.
+import Base from '../layouts/Base.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 ---
 
-<html lang="pt-BR">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="generator" content={Astro.generator} />
-		<title>João Alcântara</title>
-	</head>
-	<body>
-		<h1>João Alcântara</h1>
-		<p>Site em construção.</p>
-	</body>
-</html>
+<Base title="João Vitor Alcântara">
+	<main style="max-width: var(--content-width); margin: 0 auto; padding: 48px 24px;">
+		<ThemeToggle />
+		<h2>Prefiro projetos que tenham um problema difícil no meio</h2>
+		<p>Texto em IBM Plex Sans, com <code>código em IBM Plex Mono</code>. Site em construção.</p>
+	</main>
+</Base>

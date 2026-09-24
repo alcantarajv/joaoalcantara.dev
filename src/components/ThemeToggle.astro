@@ -1,0 +1,45 @@
+---
+// Botão que força o tema claro ou escuro. O tema salvo é aplicado em Base.astro,
+// antes da primeira pintura; aqui fica só a troca no clique.
+---
+
+<button class="theme-toggle" type="button" aria-label="Alternar tema" data-theme-toggle>TEMA</button>
+
+<style>
+	.theme-toggle {
+		font-family: var(--mono);
+		font-size: 11px;
+		letter-spacing: 0.08em;
+		padding: 5px 10px;
+		border: 1px solid var(--rule);
+		background: transparent;
+		color: var(--muted);
+		cursor: pointer;
+		flex-shrink: 0;
+	}
+
+	.theme-toggle:hover {
+		color: var(--accent);
+		border-color: var(--accent);
+	}
+</style>
+
+<script>
+	const root = document.documentElement;
+	const botao = document.querySelector('[data-theme-toggle]');
+
+	botao?.addEventListener('click', () => {
+		// Sem escolha salva, o tema atual é o do sistema.
+		const atual =
+			root.getAttribute('data-theme') ??
+			(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+		const proximo = atual === 'dark' ? 'light' : 'dark';
+
+		root.setAttribute('data-theme', proximo);
+		try {
+			localStorage.setItem('theme', proximo);
+		} catch {
+			// Armazenamento bloqueado (ex.: navegação privada): o tema vale só nesta página.
+		}
+	});
+</script>
