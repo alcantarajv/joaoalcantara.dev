@@ -1,0 +1,117 @@
+---
+// Página de endereço inexistente. O build gera dist/404.html; na Etapa 10 o Worker
+// é configurado para servi-la (com status 404) em qualquer caminho que não exista.
+import Base from '../layouts/Base.astro';
+import { projetosPublicados } from '../lib/projetos';
+import { NOME } from '../consts';
+
+const projetos = await projetosPublicados();
+---
+
+<Base title={`Página não encontrada · ${NOME}`}>
+	<div class="nao-encontrada">
+		<p class="codigo">404</p>
+		<h1>Esta página não existe</h1>
+		<p class="texto">O endereço pode ter mudado ou ter sido digitado errado. Talvez você procurasse um destes projetos:</p>
+
+		<ul class="projetos">
+			{
+				projetos.map((projeto) => (
+					<li>
+						<a href={`/projetos/${projeto.id}`}>{projeto.data.titulo}</a>
+						<span class="foco">{projeto.data.foco}</span>
+					</li>
+				))
+			}
+		</ul>
+
+		<a class="voltar" href="/">← Voltar para o início</a>
+	</div>
+</Base>
+
+<style>
+	.nao-encontrada {
+		padding-block: clamp(64px, 10vw, 104px) 72px;
+	}
+
+	.codigo {
+		font-family: var(--mono);
+		font-size: 12px;
+		letter-spacing: 0.1em;
+		color: var(--accent);
+		margin: 0 0 20px;
+	}
+
+	h1 {
+		font-family: var(--display);
+		font-size: clamp(2rem, 1.4rem + 2.6vw, 3rem);
+		font-weight: 800;
+		line-height: 1.05;
+		letter-spacing: -0.03em;
+		text-wrap: balance;
+		margin: 0 0 20px;
+	}
+
+	.texto {
+		color: var(--muted);
+		margin: 0 0 24px;
+	}
+
+	.projetos {
+		margin: 0 0 40px;
+		padding: 0;
+		list-style: none;
+		display: grid;
+		gap: 10px;
+	}
+
+	.projetos li {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 4px 12px;
+	}
+
+	.projetos a {
+		font-family: var(--display);
+		font-size: 1.1rem;
+		font-weight: 600;
+		text-decoration: none;
+		border-bottom: 1px solid var(--rule);
+		transition:
+			color 0.18s ease,
+			border-color 0.18s ease;
+	}
+
+	.projetos a:hover {
+		color: var(--accent);
+		border-bottom-color: var(--accent);
+	}
+
+	.foco {
+		font-family: var(--mono);
+		font-size: 11px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--faint);
+	}
+
+	.voltar {
+		display: inline-flex;
+		font-family: var(--mono);
+		font-size: 13px;
+		text-decoration: none;
+		padding: 9px 16px;
+		border: 1px solid var(--ink);
+		background: var(--ink);
+		color: var(--ground);
+		transition:
+			background-color 0.18s ease,
+			border-color 0.18s ease;
+	}
+
+	.voltar:hover {
+		background: var(--accent);
+		border-color: var(--accent);
+	}
+</style>

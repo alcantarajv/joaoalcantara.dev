@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Cores da paleta de tokens.css: fundo "ink" do tema claro, letra "accent" do tema escuro.
+       O quadrado tem fundo próprio, então o ícone aparece bem em abas claras e escuras.
+       Atenção: comentários em SVG não podem conter dois hifens seguidos. -->
+  <rect width="32" height="32" rx="7" fill="#15171B"/>
+  <path d="M14 8.5H21V18.5A5 5 0 0 1 11 18.5" fill="none" stroke="#D9A950" stroke-width="3.5"/>
+</svg>
