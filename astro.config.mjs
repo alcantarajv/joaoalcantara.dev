@@ -13,6 +13,9 @@ export default defineConfig({
   trailingSlash: 'never',
   build: {
     format: 'file',
+    // O CSS do site é pequeno: vai dentro de cada HTML em vez de num arquivo à parte.
+    // Elimina uma requisição que bloqueava a primeira pintura (apontado pelo Lighthouse).
+    inlineStylesheets: 'always',
   },
 
   integrations: [sitemap()],
