@@ -1,0 +1,62 @@
+---
+// Página própria de cada projeto: /projetos/<id>, onde <id> é o nome do arquivo .md.
+// É o link para usar em posts e candidaturas.
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { projetosPublicados } from '../../lib/projetos';
+import { NOME } from '../../consts';
+
+// Site estático: o Astro gera uma página por projeto publicado, no build.
+export const getStaticPaths = (async () => {
+	const projetos = await projetosPublicados();
+	return projetos.map((projeto) => ({
+		params: { slug: projeto.id },
+		props: { projeto },
+	}));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { projeto } = Astro.props;
+---
+
+<Base title={`${projeto.data.titulo} · ${NOME}`}>
+	<div class="pagina">
+		<p class="voltar"><a href="/#projetos">← Todos os projetos</a></p>
+		<ProjectCard projeto={projeto} nivel="h1" />
+	</div>
+</Base>
+
+<style>
+	.pagina {
+		padding-block: clamp(40px, 7vw, 72px) 56px;
+	}
+
+	.voltar {
+		font-family: var(--mono);
+		font-size: 12px;
+		margin: 0 0 32px;
+	}
+
+	.voltar a {
+		color: var(--muted);
+		text-decoration: none;
+		border-bottom: 1px solid var(--rule);
+		transition:
+			color 0.18s ease,
+			border-color 0.18s ease;
+	}
+
+	.voltar a:hover {
+		color: var(--accent);
+		border-bottom-color: var(--accent);
+	}
+
+	/* Aqui o nome do projeto é o título da página: usa o tamanho dos títulos de seção da home. */
+	.pagina :global(h1.project__name) {
+		font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2rem);
+		line-height: 1.15;
+		text-wrap: balance;
+	}
+</style>
