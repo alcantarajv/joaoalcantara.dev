@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # Links externos quebram sem nenhum commit (um repositório renomeado, uma aplicação
+  # removida do Render). A execução semanal pega isso mesmo sem push.
+  schedule:
+    - cron: '0 12 * * 1' # segunda-feira, 09:00 em Brasília
+  workflow_dispatch: # botão "Run workflow" na aba Actions
+
+# Um push novo no mesmo branch cancela a execução anterior, que ficou desatualizada.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# O workflow só lê o repositório; não publica nada.
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    name: Tipos, build e links
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v7
+
+      - name: Instalar Node 24 (LTS)
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      # npm ci instala exatamente o que está no package-lock.json e falha se ele
+      # estiver fora de sincronia com o package.json.
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Verificar tipos e schema dos projetos
+        run: npm run check
+
+      - name: Build
+        run: npm run build
+
+      - name: Verificar links quebrados
+        run: npm run links

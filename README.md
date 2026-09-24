@@ -1,5 +1,7 @@
 # joaoalcantara.dev
 
+[![CI](https://github.com/alcantarajv/joaoalcantara.dev/actions/workflows/ci.yml/badge.svg)](https://github.com/alcantarajv/joaoalcantara.dev/actions/workflows/ci.yml)
+
 Site pessoal de João Vitor Alcântara Corrêa, desenvolvedor backend (Java e Spring Boot).
 
 Reúne os projetos de portfólio, as formas de contato e o currículo em PDF. Endereço: **https://joaoalcantara.dev** (em construção).
@@ -28,7 +30,10 @@ npm run dev       # servidor local em http://localhost:4321
 npm run check     # verificação de tipos (TypeScript estrito)
 npm run build     # gera o site estático em dist/
 npm run preview   # serve o conteúdo de dist/ localmente
+npm run links     # verifica links quebrados em dist/ (rode depois do build)
 ```
+
+O CI (GitHub Actions) roda `npm ci`, `check`, `build` e `links` a cada push na `main`, em pull requests e uma vez por semana.
 
 ## Como adicionar um projeto
 

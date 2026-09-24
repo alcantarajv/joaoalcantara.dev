@@ -11,6 +11,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "links": "linkinator dist --config linkinator.config.mjs",
     "astro": "astro"
   },
   "dependencies": {
@@ -25,6 +26,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "linkinator": "^8.1.0",
     "typescript": "^6.0.3"
   }
 }
