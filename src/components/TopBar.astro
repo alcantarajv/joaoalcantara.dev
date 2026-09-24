@@ -1,0 +1,74 @@
+---
+// Barra fixa no topo: atalhos para as seções da home e o botão de tema.
+// Os links usam "/#secao" para funcionar também fora da home (ex.: página de projeto).
+import ThemeToggle from './ThemeToggle.astro';
+
+const links = [
+	{ href: '/#sobre', texto: 'Sobre' },
+	{ href: '/#projetos', texto: 'Projetos' },
+	{ href: '/#experiencia', texto: 'Experiência' },
+	{ href: '/#stack', texto: 'Stack' },
+	{ href: '/#contato', texto: 'Contato' },
+];
+---
+
+<header class="topbar">
+	<div class="topbar__inner">
+		<nav class="nav" aria-label="Seções">
+			{links.map(({ href, texto }) => <a href={href}>{texto}</a>)}
+		</nav>
+		<ThemeToggle />
+	</div>
+</header>
+
+<style>
+	.topbar {
+		position: sticky;
+		top: 0;
+		z-index: 20;
+		background: color-mix(in srgb, var(--ground) 92%, transparent);
+		backdrop-filter: blur(8px);
+		border-bottom: 1px solid var(--rule);
+	}
+
+	.topbar__inner {
+		max-width: var(--content-width);
+		margin: 0 auto;
+		padding-inline: 24px;
+		padding-block: 11px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+	}
+
+	.nav {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px 20px;
+		font-family: var(--mono);
+		font-size: 12px;
+		letter-spacing: 0.04em;
+	}
+
+	.nav a {
+		text-decoration: none;
+		color: var(--muted);
+		transition: color 0.18s ease;
+	}
+
+	.nav a:hover {
+		color: var(--accent);
+	}
+
+	@media (max-width: 560px) {
+		.nav {
+			font-size: 11px;
+			gap: 4px 13px;
+		}
+
+		.topbar__inner {
+			padding-inline: 16px;
+		}
+	}
+</style>

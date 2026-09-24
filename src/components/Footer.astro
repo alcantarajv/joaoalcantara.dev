@@ -1,0 +1,24 @@
+---
+import { NOME_COMPLETO } from '../consts';
+---
+
+<footer class="wrap">
+	<div class="footer">
+		<span>{NOME_COMPLETO}</span>
+		<span>Umuarama · PR</span>
+	</div>
+</footer>
+
+<style>
+	.footer {
+		border-top: 1px solid var(--rule);
+		padding-block: 26px 40px;
+		font-family: var(--mono);
+		font-size: 11.5px;
+		color: var(--faint);
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 20px;
+		justify-content: space-between;
+	}
+</style>

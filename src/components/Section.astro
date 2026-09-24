@@ -1,0 +1,33 @@
+---
+// Seção da home: linha divisória no topo, rótulo em caixa alta e o conteúdo.
+interface Props {
+	id: string;
+	label: string;
+}
+
+const { id, label } = Astro.props;
+---
+
+<section id={id}>
+	<p class="label">{label}</p>
+	<slot />
+</section>
+
+<style>
+	section {
+		padding-block: 56px;
+		border-top: 1px solid var(--rule);
+		/* Compensa a barra fixa do topo ao navegar por âncora. */
+		scroll-margin-top: 64px;
+	}
+
+	.label {
+		font-family: var(--mono);
+		font-size: 11px;
+		font-weight: 500;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--faint);
+		margin: 0 0 24px;
+	}
+</style>

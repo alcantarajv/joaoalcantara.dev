@@ -1,0 +1,81 @@
+---
+import Section from './Section.astro';
+
+const experiencias = [
+	{
+		periodo: 'Fev — Abr / 2025',
+		titulo: 'Desenvolvedor Web · C1 Álbuns',
+		descricao:
+			'Manutenção e evolução de sites institucionais em WordPress: novas funcionalidades, otimização de desempenho e atualização de plugins e temas. Suporte e ajustes em sistema interno.',
+	},
+	{
+		periodo: 'Ago / 2024 — Fev / 2025',
+		titulo: 'Estagiário · Stringhini Varejo Inteligente',
+		descricao:
+			'Rotinas de validação e tratamento de dados para relatórios gerenciais, apoiando estratégias de marketing e operações de varejo. Testes de usabilidade e suporte a sistemas internos.',
+	},
+	{
+		periodo: '2022 — 2025',
+		titulo: 'Bacharelado em Sistemas de Informação · UNIPAR',
+		descricao: 'Universidade Paranaense. Concluído em dezembro de 2025.',
+	},
+];
+---
+
+<Section id="experiencia" label="Experiência">
+	<h2>Trajetória</h2>
+	{
+		experiencias.map(({ periodo, titulo, descricao }) => (
+			<div class="role">
+				<div class="role__when">{periodo}</div>
+				<div>
+					<p class="role__title">{titulo}</p>
+					<p class="role__body">{descricao}</p>
+				</div>
+			</div>
+		))
+	}
+</Section>
+
+<style>
+	.role {
+		display: grid;
+		grid-template-columns: 160px 1fr;
+		gap: 4px 28px;
+		max-width: var(--measure);
+	}
+
+	.role + .role {
+		margin-top: 26px;
+	}
+
+	.role__when {
+		font-family: var(--mono);
+		font-size: 12px;
+		color: var(--faint);
+		padding-top: 4px;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.role__title {
+		font-weight: 600;
+		margin: 0 0 2px;
+	}
+
+	.role__body {
+		color: var(--muted);
+		font-size: 15px;
+		margin: 0;
+	}
+
+	@media (max-width: 620px) {
+		.role {
+			grid-template-columns: 1fr;
+			gap: 2px;
+		}
+
+		.role__when {
+			padding-top: 0;
+		}
+	}
+</style>

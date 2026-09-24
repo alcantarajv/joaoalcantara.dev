@@ -1,0 +1,52 @@
+---
+import Section from './Section.astro';
+import { EMAIL, GITHUB, LINKEDIN } from '../consts';
+
+// Endereço exibido sem o "https://", como na referência.
+const semProtocolo = (url: string) => url.replace(/^https:\/\//, '');
+---
+
+<Section id="contato" label="Contato">
+	<h2>Aberto a oportunidades como desenvolvedor backend</h2>
+	<p>Se o que está aqui fizer sentido para a sua equipe, escreva — respondo a todas as mensagens.</p>
+	<ul class="contact-links">
+		<li><a href={`mailto:${EMAIL}`}>{EMAIL}</a></li>
+		<li>
+			<a href={LINKEDIN} target="_blank" rel="noopener">
+				{semProtocolo(LINKEDIN)}<span class="sr-only"> (abre em nova aba)</span>
+			</a>
+		</li>
+		<li>
+			<a href={GITHUB} target="_blank" rel="noopener">
+				{semProtocolo(GITHUB)}<span class="sr-only"> (abre em nova aba)</span>
+			</a>
+		</li>
+	</ul>
+</Section>
+
+<style>
+	.contact-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px 28px;
+		font-family: var(--mono);
+		font-size: 14px;
+		margin-top: 22px;
+		padding: 0;
+		list-style: none;
+	}
+
+	.contact-links a {
+		text-decoration: none;
+		border-bottom: 1px solid var(--rule);
+		padding-bottom: 2px;
+		transition:
+			border-color 0.18s ease,
+			color 0.18s ease;
+	}
+
+	.contact-links a:hover {
+		color: var(--accent);
+		border-bottom-color: var(--accent);
+	}
+</style>

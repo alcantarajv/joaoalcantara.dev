@@ -1,0 +1,48 @@
+---
+import Section from './Section.astro';
+
+const grupos = [
+	{ nome: 'Linguagem', itens: 'Java 21, SQL, JavaScript, PHP' },
+	{ nome: 'Backend', itens: 'Spring Boot, Spring Security, JPA / Hibernate, APIs REST, JWT' },
+	{ nome: 'Dados e mensageria', itens: 'PostgreSQL, MySQL, Redis, RabbitMQ, Flyway' },
+	{ nome: 'Testes', itens: 'JUnit 5, AssertJ, Testcontainers, WireMock' },
+	{ nome: 'Infra', itens: 'Docker, Docker Compose, GitHub Actions, Render' },
+	{ nome: 'Frontend', itens: 'HTML, CSS, React, Angular' },
+];
+---
+
+<Section id="stack" label="Stack">
+	<dl class="stack">
+		{
+			grupos.map(({ nome, itens }) => (
+				<div>
+					<dt>{nome}</dt>
+					<dd>{itens}</dd>
+				</div>
+			))
+		}
+	</dl>
+</Section>
+
+<style>
+	.stack {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+		gap: 22px 32px;
+		margin: 0;
+	}
+
+	dt {
+		font-family: var(--mono);
+		font-size: 11px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--faint);
+		margin-bottom: 6px;
+	}
+
+	dd {
+		margin: 0;
+		font-size: 15px;
+	}
+</style>

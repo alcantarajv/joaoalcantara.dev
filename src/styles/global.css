@@ -57,6 +57,26 @@ code {
   font-size: 0.9em;
 }
 
+/* Coluna central do conteúdo. */
+.wrap {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding-inline: 24px;
+}
+
+/* Texto lido por leitores de tela, mas invisível na página. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;
