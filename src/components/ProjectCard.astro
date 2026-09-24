@@ -1,0 +1,172 @@
+---
+// Um projeto completo: cabeçalho, pergunta, raciocínio (corpo do .md), stack e links.
+import { render, type CollectionEntry } from 'astro:content';
+
+interface Props {
+	projeto: CollectionEntry<'projetos'>;
+	// h2 quando o projeto é uma seção da home; h1 quando ele é a página inteira.
+	nivel?: 'h1' | 'h2';
+}
+
+const { projeto, nivel = 'h2' } = Astro.props;
+const { titulo, foco, pergunta, stack, links } = projeto.data;
+const { Content } = await render(projeto);
+const Titulo = nivel;
+
+const linksExternos: { href: string; texto: string }[] = [];
+if (links.aoVivo) linksExternos.push({ href: links.aoVivo, texto: 'Aplicação ao vivo' });
+if (links.docs) linksExternos.push({ href: links.docs, texto: 'Documentação da API' });
+linksExternos.push({ href: links.codigo, texto: 'Código no GitHub' });
+---
+
+<article class="project" id={projeto.id}>
+	<div class="project__head">
+		<Titulo class="project__name">{titulo}</Titulo>
+		<span class="project__focus">{foco}</span>
+		{links.aoVivo && <span class="project__status">No ar</span>}
+	</div>
+
+	<p class="question">{pergunta}</p>
+
+	<div class="project__body">
+		<Content />
+	</div>
+
+	<ul class="chips">
+		{stack.map((item) => <li>{item}</li>)}
+	</ul>
+
+	<div class="links">
+		{
+			linksExternos.map(({ href, texto }) => (
+				<a href={href} target="_blank" rel="noopener">
+					<span aria-hidden="true">↗</span> {texto}<span class="sr-only"> (abre em nova aba)</span>
+				</a>
+			))
+		}
+	</div>
+</article>
+
+<style>
+	.project {
+		padding-block: 8px 0;
+		scroll-margin-top: 72px;
+	}
+
+	.project + .project {
+		margin-top: 48px;
+		padding-top: 48px;
+		border-top: 1px dashed var(--rule);
+	}
+
+	.project__head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 8px 14px;
+		margin-bottom: 18px;
+	}
+
+	.project__name {
+		font-family: var(--display);
+		font-size: 1.35rem;
+		font-weight: 600;
+		letter-spacing: -0.015em;
+		margin: 0;
+	}
+
+	.project__focus {
+		font-family: var(--mono);
+		font-size: 11px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--faint);
+	}
+
+	.project__status {
+		font-family: var(--mono);
+		font-size: 11px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--accent);
+		background: var(--accent-soft);
+		padding: 3px 8px;
+		white-space: nowrap;
+	}
+
+	.question {
+		font-family: var(--display);
+		font-size: 1.1rem;
+		font-weight: 400;
+		font-style: italic;
+		color: var(--muted);
+		border-left: 2px solid var(--accent);
+		padding-left: 16px;
+		margin: 0 0 20px;
+		max-width: var(--measure);
+	}
+
+	/* O corpo vem do Markdown e não recebe o escopo deste componente: por isso o :global(),
+	   sempre preso a .project__body para não vazar para o resto do site. */
+	.project__body {
+		margin-bottom: 16px;
+	}
+
+	.project__body :global(pre) {
+		font-family: var(--mono);
+		font-size: 12.5px;
+		line-height: 1.6;
+		background: var(--surface);
+		border: 1px solid var(--rule);
+		padding: 14px 16px;
+		overflow-x: auto;
+		margin: 0 0 20px;
+		color: var(--ink);
+	}
+
+	/* Destaques marcados à mão num <pre> em HTML dentro do .md, para pseudocódigo que nenhuma
+	   linguagem do Shiki descreve (ex.: api-pedidos.md). k = palavra-chave, c = comentário ou valor. */
+	.project__body :global(pre .k) {
+		color: var(--astro-code-token-keyword);
+	}
+
+	.project__body :global(pre .c) {
+		color: var(--astro-code-token-comment);
+	}
+
+	.chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		margin: 0 0 18px;
+		padding: 0;
+		list-style: none;
+	}
+
+	.chips li {
+		font-family: var(--mono);
+		font-size: 11.5px;
+		color: var(--muted);
+		border: 1px solid var(--rule);
+		padding: 3px 9px;
+	}
+
+	.links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 20px;
+		font-family: var(--mono);
+		font-size: 13px;
+	}
+
+	.links a {
+		color: var(--accent);
+		text-decoration: none;
+		border-bottom: 1px solid transparent;
+		transition: border-color 0.18s ease;
+	}
+
+	.links a:hover {
+		border-bottom-color: var(--accent);
+	}
+</style>

@@ -30,4 +30,28 @@ npm run build     # gera o site estático em dist/
 npm run preview   # serve o conteúdo de dist/ localmente
 ```
 
-Como adicionar um projeto e as decisões técnicas entram neste README conforme o site for construído.
+## Como adicionar um projeto
+
+Crie um arquivo `.md` em `src/content/projetos/`. O nome do arquivo vira o identificador do projeto (por exemplo, `meu-projeto.md` → `meu-projeto`). Nenhum HTML precisa ser editado.
+
+```yaml
+---
+titulo: "Nome do Projeto"
+foco: "latência"              # rótulo curto exibido no card
+pergunta: "Qual problema difícil este projeto responde?"
+resumo: "Uma frase sobre o projeto, usada em descrições e compartilhamento."
+stack: ["Java 21", "Spring Boot 4", "PostgreSQL"]
+links:
+  aoVivo: "https://..."       # opcional; sem ele o card não mostra o selo "No ar"
+  docs: "https://..."         # opcional; documentação da API (Swagger)
+  codigo: "https://github.com/alcantarajv/..."
+ordem: 4                      # posição na página, do menor para o maior
+publicado: true               # false tira o projeto do site sem apagar o arquivo
+---
+
+O raciocínio do projeto, em Markdown: o problema, as alternativas descartadas e um trecho de código.
+```
+
+O schema está em `src/content.config.ts`. Um campo obrigatório faltando, um campo com nome errado ou uma URL inválida fazem o `npm run check` e o `npm run build` falharem, então o erro aparece antes de chegar ao site no ar.
+
+As decisões técnicas entram neste README conforme o site for construído.

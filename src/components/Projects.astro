@@ -1,148 +1,25 @@
 ---
-// Seção de projetos, ainda escrita à mão.
-// Na Etapa 4 os projetos passam a vir de src/content/projetos/, um arquivo por projeto.
+// Seção de projetos da home, gerada a partir de src/content/projetos/.
+// Adicionar um projeto é criar um arquivo .md lá; nada aqui precisa mudar.
 import Section from './Section.astro';
+import ProjectCard from './ProjectCard.astro';
+import { projetosPublicados } from '../lib/projetos';
+
+const projetos = await projetosPublicados();
 ---
 
 <Section id="projetos" label="Projetos">
 	<ul class="arc" aria-label="Sequência dos projetos">
-		<li><a href="#p-encurtador">latência</a></li>
-		<li><a href="#p-reservas">concorrência</a></li>
-		<li><a href="#p-pedidos">consistência entre sistemas</a></li>
+		{
+			projetos.map((projeto) => (
+				<li>
+					<a href={`#${projeto.id}`}>{projeto.data.foco}</a>
+				</li>
+			))
+		}
 	</ul>
 
-	<article class="project" id="p-encurtador">
-		<div class="project__head">
-			<h2 class="project__name">Encurtador de Links</h2>
-			<span class="project__focus">latência</span>
-			<span class="project__status">No ar</span>
-		</div>
-		<p class="question">
-			Como servir o redirecionamento, que é o endpoint de maior tráfego, sem que cada acesso custe uma ida ao banco?
-		</p>
-		<p>
-			O redirecionamento é o caminho mais quente da aplicação: ele precisa responder em poucos milissegundos e ainda
-			registrar dados de acesso. Servi as buscas por cache em Redis e joguei o registro de cliques para fora do fluxo
-			da resposta, de forma assíncrona — a coleta de métricas não cobra nada do usuário que clicou.
-		</p>
-		<p>
-			O código curto é aleatório em Base62, e não o id do banco convertido. Converter o id nunca colide, mas torna os
-			links enumeráveis: quem recebe o link <code>2</code> tenta o <code>3</code> e varre o acervo inteiro do serviço.
-			O aleatório custa uma consulta a mais para checar colisão, e um índice único no banco fecha a janela de corrida
-			que a checagem em Java deixa aberta.
-		</p>
-		<ul class="chips">
-			{
-				['Java 21', 'Spring Boot 4', 'PostgreSQL', 'Redis', 'Flyway', 'Docker', 'GitHub Actions'].map((t) => (
-					<li>{t}</li>
-				))
-			}
-		</ul>
-		<div class="links">
-			<a href="https://encurtador-links-rudi.onrender.com" target="_blank" rel="noopener">
-				<span aria-hidden="true">↗</span> Aplicação ao vivo<span class="sr-only"> (abre em nova aba)</span>
-			</a>
-			<a href="https://github.com/alcantarajv/encurtador-links" target="_blank" rel="noopener">
-				<span aria-hidden="true">↗</span> Código no GitHub<span class="sr-only"> (abre em nova aba)</span>
-			</a>
-		</div>
-	</article>
-
-	<article class="project" id="p-reservas">
-		<div class="project__head">
-			<h2 class="project__name">Reserva de Quadras</h2>
-			<span class="project__focus">concorrência</span>
-			<span class="project__status">No ar</span>
-		</div>
-		<p class="question">
-			O que acontece se duas pessoas clicarem em “reservar” na mesma quadra, no mesmo horário, no mesmo instante?
-		</p>
-		<p>
-			A resposta intuitiva — consultar se está livre e então gravar — não resolve. Existe uma janela entre a consulta
-			e a gravação, e dentro dela a outra requisição também consultou, também viu livre, e também vai gravar.
-		</p>
-		<p>
-			Lock otimista não serve, porque o conflito é entre linhas diferentes que se sobrepõem no tempo, não entre duas
-			versões da mesma linha. Lock pessimista na quadra resolve, mas serializa até as reservas que não conflitam entre
-			si. A garantia foi para o único lugar sem janela de corrida:
-		</p>
-		<pre><span class="c">-- reservas não podem se sobrepor na mesma quadra</span>
-<span class="k">ALTER TABLE</span> reservas <span class="k">ADD CONSTRAINT</span> reservas_sem_sobreposicao
-  <span class="k">EXCLUDE USING</span> gist (
-    quadra_id <span class="k">WITH</span> =,
-    tstzrange(inicio, fim, <span class="c">'[)'</span>) <span class="k">WITH</span> &amp;&amp;
-  ) <span class="k">WHERE</span> (status &lt;&gt; <span class="c">'CANCELADA'</span>);</pre>
-		<p>
-			Para não parar na afirmação, há um teste que dispara várias threads disputando o mesmo horário e verifica que
-			exatamente uma reserva vence.
-		</p>
-		<ul class="chips">
-			{
-				['Java 21', 'Spring Boot 4', 'Spring Security', 'JWT', 'PostgreSQL', 'Testcontainers'].map((t) => (
-					<li>{t}</li>
-				))
-			}
-		</ul>
-		<div class="links">
-			<a href="https://reserva-quadras.onrender.com/" target="_blank" rel="noopener">
-				<span aria-hidden="true">↗</span> Aplicação ao vivo<span class="sr-only"> (abre em nova aba)</span>
-			</a>
-			<a href="https://github.com/alcantarajv/reserva-quadras" target="_blank" rel="noopener">
-				<span aria-hidden="true">↗</span> Código no GitHub<span class="sr-only"> (abre em nova aba)</span>
-			</a>
-		</div>
-	</article>
-
-	<article class="project" id="p-pedidos">
-		<div class="project__head">
-			<h2 class="project__name">API de Pedidos e Pagamentos</h2>
-			<span class="project__focus">consistência</span>
-			<span class="project__status">No ar</span>
-		</div>
-		<p class="question">
-			O gateway de pagamento avisa duas vezes que o mesmo pedido foi pago. E se a fila cair logo depois do banco
-			confirmar?
-		</p>
-		<p>
-			Webhooks de pagamento são entregues “pelo menos uma vez” — a repetição faz parte do contrato, não é falha. Cada
-			evento recebido tem o id registrado numa tabela com restrição de unicidade, na mesma transação que aplica o
-			efeito. A segunda entrega colide ali e é descartada; em teste, doze entregas simultâneas do mesmo evento
-			produzem um único efeito.
-		</p>
-		<p>
-			O segundo problema é que gravar o pedido e publicar o evento na fila são operações em sistemas diferentes, sem
-			transação comum — qualquer ordem pode deixar um dos lados para trás. Com o padrão outbox, o evento é gravado
-			numa tabela do próprio banco junto com o pedido, e um worker separado cuida da publicação:
-		</p>
-		<pre><span class="c">POST /webhooks/stripe</span>          <span class="c">-- assinatura verificada antes de tudo</span>
-<span class="k">BEGIN</span>
-  <span class="k">INSERT INTO</span> eventos_processados (evento_id)  <span class="c">-- 2ª entrega colide aqui</span>
-  <span class="k">UPDATE</span> pedidos <span class="k">SET</span> status = <span class="c">'PAGO'</span>
-  <span class="k">INSERT INTO</span> outbox (tipo, payload)         <span class="c">-- mesmo commit do pedido</span>
-<span class="k">COMMIT</span>
-
-<span class="c">worker:</span> lê outbox → publica no RabbitMQ → marca entregue
-<span class="c">consumidor:</span> idempotente, porque a entrega é “pelo menos uma vez”</pre>
-		<p>
-			Troquei a promessa de “entrega exatamente uma vez”, que não existe entre sistemas distribuídos, por “pelo menos
-			uma vez com consumidores idempotentes” — que é como integrações reais funcionam.
-		</p>
-		<ul class="chips">
-			{
-				['Java 21', 'Spring Boot 4', 'RabbitMQ', 'Stripe', 'PostgreSQL', 'Testcontainers', 'WireMock'].map((t) => (
-					<li>{t}</li>
-				))
-			}
-		</ul>
-		<div class="links">
-			<a href="https://api-pedidos-yi5d.onrender.com" target="_blank" rel="noopener">
-				<span aria-hidden="true">↗</span> Aplicação ao vivo<span class="sr-only"> (abre em nova aba)</span>
-			</a>
-			<a href="https://github.com/alcantarajv/api-pedidos" target="_blank" rel="noopener">
-				<span aria-hidden="true">↗</span> Código no GitHub<span class="sr-only"> (abre em nova aba)</span>
-			</a>
-		</div>
-	</article>
+	{projetos.map((projeto) => <ProjectCard projeto={projeto} />)}
 </Section>
 
 <style>
@@ -177,120 +54,6 @@ import Section from './Section.astro';
 
 	.arc a:hover {
 		color: var(--accent);
-		border-bottom-color: var(--accent);
-	}
-
-	.project {
-		padding-block: 8px 0;
-		scroll-margin-top: 72px;
-	}
-
-	.project + .project {
-		margin-top: 48px;
-		padding-top: 48px;
-		border-top: 1px dashed var(--rule);
-	}
-
-	.project__head {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: baseline;
-		gap: 8px 14px;
-		margin-bottom: 18px;
-	}
-
-	.project__name {
-		font-family: var(--display);
-		font-size: 1.35rem;
-		font-weight: 600;
-		letter-spacing: -0.015em;
-		margin: 0;
-	}
-
-	.project__focus {
-		font-family: var(--mono);
-		font-size: 11px;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--faint);
-	}
-
-	.project__status {
-		font-family: var(--mono);
-		font-size: 11px;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--accent);
-		background: var(--accent-soft);
-		padding: 3px 8px;
-		white-space: nowrap;
-	}
-
-	.question {
-		font-family: var(--display);
-		font-size: 1.1rem;
-		font-weight: 400;
-		font-style: italic;
-		color: var(--muted);
-		border-left: 2px solid var(--accent);
-		padding-left: 16px;
-		margin: 0 0 20px;
-		max-width: var(--measure);
-	}
-
-	pre {
-		font-family: var(--mono);
-		font-size: 12.5px;
-		line-height: 1.6;
-		background: var(--surface);
-		border: 1px solid var(--rule);
-		padding: 14px 16px;
-		overflow-x: auto;
-		margin: 0 0 20px;
-		color: var(--ink);
-	}
-
-	pre .c {
-		color: var(--faint);
-	}
-
-	pre .k {
-		color: var(--accent);
-	}
-
-	.chips {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 6px;
-		margin: 0 0 18px;
-		padding: 0;
-		list-style: none;
-	}
-
-	.chips li {
-		font-family: var(--mono);
-		font-size: 11.5px;
-		color: var(--muted);
-		border: 1px solid var(--rule);
-		padding: 3px 9px;
-	}
-
-	.links {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 8px 20px;
-		font-family: var(--mono);
-		font-size: 13px;
-	}
-
-	.links a {
-		color: var(--accent);
-		text-decoration: none;
-		border-bottom: 1px solid transparent;
-		transition: border-color 0.18s ease;
-	}
-
-	.links a:hover {
 		border-bottom-color: var(--accent);
 	}
 </style>
