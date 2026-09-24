@@ -1,6 +1,7 @@
 /*
  * Tokens de design: a única fonte de cores, fontes e medidas do site.
- * Valores portados de referencia-design.html.
+ * Valores portados de referencia-design.html, exceto --faint: escurecido no claro e
+ * clareado no escuro para atingir contraste AA (4,5:1) sobre --ground e --surface.
  *
  * Tema: segue prefers-color-scheme por padrão. O atributo data-theme no <html>
  * (definido pelo botão de tema) força um dos dois.
@@ -13,7 +14,7 @@
   --surface:     #F1F0EA;
   --ink:         #15171B;
   --muted:       #5B6068;
-  --faint:       #8A8F97;
+  --faint:       #686D75;
   --rule:        #DEDCD4;
   --accent:      #8A5D10;
   --accent-soft: #F0E4C9;
@@ -49,7 +50,7 @@
     --surface:     #1A1D23;
     --ink:         #E9E8E3;
     --muted:       #9DA2AA;
-    --faint:       #6E747D;
+    --faint:       #7F858E;
     --rule:        #292D34;
     --accent:      #D9A950;
     --accent-soft: #2E2718;
@@ -64,7 +65,7 @@
   --surface:     #1A1D23;
   --ink:         #E9E8E3;
   --muted:       #9DA2AA;
-  --faint:       #6E747D;
+  --faint:       #7F858E;
   --rule:        #292D34;
   --accent:      #D9A950;
   --accent-soft: #2E2718;

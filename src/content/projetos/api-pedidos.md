@@ -16,7 +16,7 @@ Webhooks de pagamento são entregues “pelo menos uma vez” — a repetição 
 
 O segundo problema é que gravar o pedido e publicar o evento na fila são operações em sistemas diferentes, sem transação comum — qualquer ordem pode deixar um dos lados para trás. Com o padrão outbox, o evento é gravado numa tabela do próprio banco junto com o pedido, e um worker separado cuida da publicação:
 
-<pre><span class="c">POST /webhooks/stripe</span>          <span class="c">-- assinatura verificada antes de tudo</span>
+<pre tabindex="0"><span class="c">POST /webhooks/stripe</span>          <span class="c">-- assinatura verificada antes de tudo</span>
 <span class="k">BEGIN</span>
   <span class="k">INSERT INTO</span> eventos_processados (evento_id)  <span class="c">-- 2ª entrega colide aqui</span>
   <span class="k">UPDATE</span> pedidos <span class="k">SET</span> status = <span class="c">'PAGO'</span>

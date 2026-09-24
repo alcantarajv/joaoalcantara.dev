@@ -6,10 +6,12 @@ interface Props {
 }
 
 const { id, label } = Astro.props;
+const idRotulo = `${id}-rotulo`;
 ---
 
-<section id={id}>
-	<p class="label">{label}</p>
+{/* aria-labelledby dá nome à seção: leitores de tela a listam entre as regiões da página ("Stack", "Contato"...). */}
+<section id={id} aria-labelledby={idRotulo}>
+	<p class="label" id={idRotulo}>{label}</p>
 	<slot />
 </section>
 

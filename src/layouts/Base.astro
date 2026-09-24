@@ -80,8 +80,10 @@ const imagem = new URL('/og.png', Astro.site).href;
 		</script>
 	</head>
 	<body>
+		{/* Primeiro item do Tab: pula o menu e vai direto ao conteúdo. Só aparece ao receber foco. */}
+		<a class="pular" href="#conteudo">Pular para o conteúdo</a>
 		<TopBar />
-		<main class="wrap">
+		<main class="wrap" id="conteudo" tabindex="-1">
 			<slot />
 		</main>
 		<Footer />

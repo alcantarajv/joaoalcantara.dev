@@ -64,6 +64,30 @@ code {
   padding-inline: 24px;
 }
 
+/* Link "Pular para o conteúdo": fora da tela até receber foco pelo teclado. */
+.pular {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 30; /* acima da barra fixa do topo */
+  padding: 8px 14px;
+  font-family: var(--mono);
+  font-size: 13px;
+  background: var(--ink);
+  color: var(--ground);
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.pular:focus {
+  transform: none;
+}
+
+/* O <main> recebe foco pelo link acima (tabindex="-1"), mas não precisa de contorno. */
+main:focus {
+  outline: none;
+}
+
 /* Texto lido por leitores de tela, mas invisível na página. */
 .sr-only {
   position: absolute;
