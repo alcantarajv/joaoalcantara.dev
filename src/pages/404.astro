@@ -8,7 +8,7 @@ import { NOME } from '../consts';
 const projetos = await projetosPublicados();
 ---
 
-<Base title={`Página não encontrada · ${NOME}`}>
+<Base title={`Página não encontrada · ${NOME}`} description="Este endereço não existe no site." indexar={false}>
 	<div class="nao-encontrada">
 		<p class="codigo">404</p>
 		<h1>Esta página não existe</h1>

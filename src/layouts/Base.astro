@@ -11,12 +11,27 @@ import '../styles/global.css';
 
 import TopBar from '../components/TopBar.astro';
 import Footer from '../components/Footer.astro';
+import { NOME } from '../consts';
 
 interface Props {
 	title: string;
+	// Texto dos resultados de busca e das prévias de link (LinkedIn, WhatsApp...). Obrigatório.
+	description: string;
+	// false em páginas que não devem aparecer em buscadores (ex.: 404).
+	indexar?: boolean;
 }
 
-const { title } = Astro.props;
+const { title, description, indexar = true } = Astro.props;
+
+// Endereço canônico: sempre https://joaoalcantara.dev, sem barra final.
+// Com build.format 'file', o Astro informa o caminho do arquivo gerado ("/index.html",
+// "/projetos/x.html"); tiramos ".html" e "index" para chegar ao endereço público.
+const caminho = Astro.url.pathname
+	.replace(/\.html$/, '')
+	.replace(/(^|\/)index$/, '')
+	.replace(/\/$/, '');
+const canonical = new URL(caminho || '/', Astro.site).href.replace(/\/$/, '');
+const imagem = new URL('/og.png', Astro.site).href;
 ---
 
 <!doctype html>
@@ -26,7 +41,30 @@ const { title } = Astro.props;
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="sitemap" href="/sitemap-index.xml" />
+
 		<title>{title}</title>
+		<meta name="description" content={description} />
+		{indexar ? <link rel="canonical" href={canonical} /> : <meta name="robots" content="noindex" />}
+
+		{/* Open Graph: a prévia que aparece ao colar o link no LinkedIn, WhatsApp, Slack etc. */}
+		<meta property="og:type" content="website" />
+		<meta property="og:locale" content="pt_BR" />
+		<meta property="og:site_name" content={NOME} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		{indexar && <meta property="og:url" content={canonical} />}
+		<meta property="og:image" content={imagem} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta
+			property="og:image:alt"
+			content="João Vitor Alcântara, desenvolvedor backend: sistemas confiáveis, do banco de dados à API. Java, Spring Boot e PostgreSQL."
+		/>
+		<meta name="twitter:card" content="summary_large_image" />
+
+		{/* Conteúdo extra do <head> vindo da página (ex.: JSON-LD na home). */}
+		<slot name="head" />
 
 		{/*
 			Aplica o tema escolhido antes da primeira pintura, para não haver flash.

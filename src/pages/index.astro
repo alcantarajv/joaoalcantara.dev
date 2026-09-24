@@ -6,9 +6,38 @@ import Projects from '../components/Projects.astro';
 import Experience from '../components/Experience.astro';
 import Stack from '../components/Stack.astro';
 import Contact from '../components/Contact.astro';
+import { GITHUB, LINKEDIN, NOME, NOME_COMPLETO } from '../consts';
+
+// Dados estruturados (schema.org): dizem aos buscadores quem é a pessoa do site
+// e ligam este endereço aos perfis no LinkedIn e no GitHub (sameAs).
+const pessoa = {
+	'@context': 'https://schema.org',
+	'@type': 'Person',
+	name: NOME_COMPLETO,
+	alternateName: NOME,
+	url: new URL('/', Astro.site).href.replace(/\/$/, ''),
+	jobTitle: 'Desenvolvedor backend',
+	address: {
+		'@type': 'PostalAddress',
+		addressLocality: 'Umuarama',
+		addressRegion: 'PR',
+		addressCountry: 'BR',
+	},
+	alumniOf: {
+		'@type': 'CollegeOrUniversity',
+		name: 'Universidade Paranaense (UNIPAR)',
+	},
+	knowsAbout: ['Java', 'Spring Boot', 'PostgreSQL', 'APIs REST'],
+	sameAs: [LINKEDIN, GITHUB],
+};
 ---
 
-<Base title="João Vitor Alcântara">
+<Base
+	title={`${NOME} · Desenvolvedor backend`}
+	description="Desenvolvedor backend em Java e Spring Boot. Projetos com o raciocínio por trás de cada decisão, currículo e contato."
+>
+	<script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(pessoa)} />
+
 	<Hero />
 	<About />
 	<Projects />
