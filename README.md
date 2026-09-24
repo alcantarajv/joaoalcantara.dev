@@ -18,4 +18,16 @@ Reúne os projetos de portfólio, as formas de contato e o currículo em PDF. En
 - CSS puro com variáveis, sem framework de interface
 - Hospedagem no Cloudflare Workers (static assets), com deploy a cada push na `main`
 
-Instruções de execução, de como adicionar um projeto e as decisões técnicas entram neste README conforme o site for construído.
+## Como rodar
+
+Requer Node 22.12 ou mais recente.
+
+```bash
+npm install
+npm run dev       # servidor local em http://localhost:4321
+npm run check     # verificação de tipos (TypeScript estrito)
+npm run build     # gera o site estático em dist/
+npm run preview   # serve o conteúdo de dist/ localmente
+```
+
+Como adicionar um projeto e as decisões técnicas entram neste README conforme o site for construído.
