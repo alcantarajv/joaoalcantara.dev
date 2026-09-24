@@ -1,17 +1,21 @@
 ---
-// Um projeto completo: cabeçalho, pergunta, raciocínio (corpo do .md), stack e links.
+// Um projeto, em dois formatos:
+//   resumo   (home):              título com link, pergunta, resumo, stack e links.
+//   completo (/projetos/<id>):    título como h1 e o raciocínio inteiro (corpo do .md) no lugar do resumo.
 import { render, type CollectionEntry } from 'astro:content';
 
 interface Props {
 	projeto: CollectionEntry<'projetos'>;
-	// h2 quando o projeto é uma seção da home; h1 quando ele é a página inteira.
-	nivel?: 'h1' | 'h2';
+	modo?: 'resumo' | 'completo';
 }
 
-const { projeto, nivel = 'h2' } = Astro.props;
-const { titulo, foco, pergunta, stack, links } = projeto.data;
-const { Content } = await render(projeto);
-const Titulo = nivel;
+const { projeto, modo = 'resumo' } = Astro.props;
+const { titulo, foco, pergunta, resumo, stack, links } = projeto.data;
+const completo = modo === 'completo';
+const pagina = `/projetos/${projeto.id}`;
+
+// O corpo do .md só é renderizado na página do projeto.
+const Content = completo ? (await render(projeto)).Content : undefined;
 
 const linksExternos: { href: string; texto: string }[] = [];
 if (links.aoVivo) linksExternos.push({ href: links.aoVivo, texto: 'Aplicação ao vivo' });
@@ -21,22 +25,43 @@ linksExternos.push({ href: links.codigo, texto: 'Código no GitHub' });
 
 <article class="project" id={projeto.id}>
 	<div class="project__head">
-		<Titulo class="project__name">{titulo}</Titulo>
+		{
+			completo ? (
+				<h1 class="project__name">{titulo}</h1>
+			) : (
+				<h2 class="project__name">
+					<a href={pagina}>{titulo}</a>
+				</h2>
+			)
+		}
 		<span class="project__focus">{foco}</span>
 		{links.aoVivo && <span class="project__status">No ar</span>}
 	</div>
 
 	<p class="question">{pergunta}</p>
 
-	<div class="project__body">
-		<Content />
-	</div>
+	{
+		Content ? (
+			<div class="project__body">
+				<Content />
+			</div>
+		) : (
+			<p class="resumo">{resumo}</p>
+		)
+	}
 
 	<ul class="chips">
 		{stack.map((item) => <li>{item}</li>)}
 	</ul>
 
 	<div class="links">
+		{
+			!completo && (
+				<a href={pagina}>
+					<span aria-hidden="true">→</span> Ler o raciocínio<span class="sr-only"> do projeto {titulo}</span>
+				</a>
+			)
+		}
 		{
 			linksExternos.map(({ href, texto }) => (
 				<a href={href} target="_blank" rel="noopener">
@@ -92,6 +117,20 @@ linksExternos.push({ href: links.codigo, texto: 'Código no GitHub' });
 		background: var(--accent-soft);
 		padding: 3px 8px;
 		white-space: nowrap;
+	}
+
+	/* Na home, o título é link para a página do projeto. */
+	.project__name a {
+		text-decoration: none;
+		transition: color 0.18s ease;
+	}
+
+	.project__name a:hover {
+		color: var(--accent);
+	}
+
+	.resumo {
+		margin-bottom: 18px;
 	}
 
 	.question {

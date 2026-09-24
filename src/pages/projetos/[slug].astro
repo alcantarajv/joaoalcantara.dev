@@ -24,7 +24,7 @@ const { projeto } = Astro.props;
 <Base title={`${projeto.data.titulo} · ${NOME}`}>
 	<div class="pagina">
 		<p class="voltar"><a href="/#projetos">← Todos os projetos</a></p>
-		<ProjectCard projeto={projeto} nivel="h1" />
+		<ProjectCard projeto={projeto} modo="completo" />
 	</div>
 </Base>
 
