@@ -45,6 +45,14 @@ jobs:
       - name: Verificar tipos e schema dos projetos
         run: npm run check
 
+      # O currículo é um arquivo copiado à mão para public/. Uma cópia cortada ainda responde
+      # 200 no site (a verificação de links não pega), mas não abre. Um PDF inteiro começa com
+      # "%PDF-" e termina com "%%EOF".
+      - name: Verificar se o currículo é um PDF inteiro
+        run: |
+          head -c 5 public/curriculo.pdf | grep -q '%PDF-'
+          tail -c 1024 public/curriculo.pdf | grep -qa '%%EOF'
+
       - name: Build
         run: npm run build
 
