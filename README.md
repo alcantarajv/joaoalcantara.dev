@@ -4,7 +4,7 @@
 
 Site pessoal de João Vitor Alcântara Corrêa, desenvolvedor backend (Java e Spring Boot).
 
-Reúne os projetos de portfólio, as formas de contato e o currículo em PDF. Endereço: **https://joaoalcantara.dev** (em construção).
+Reúne os projetos de portfólio, as formas de contato e o currículo em PDF. No ar em **https://joaoalcantara.dev**.
 
 ## Projetos apresentados
 
@@ -38,6 +38,12 @@ O CI (GitHub Actions) roda `npm ci`, `check`, `build` e `links` a cada push na `
 ## Deploy
 
 O site é publicado no Cloudflare Workers (static assets) pelo **Workers Builds**: cada push na `main` gera o build (`npm run build`) e publica `dist/` (`npx wrangler deploy`), sem token no repositório. A configuração do Worker está em `wrangler.jsonc`, e a versão do Node em `.node-version`, lida tanto pelo CI quanto pelo Workers Builds.
+
+Configurado no painel da Cloudflare (fora do repositório):
+
+- **Domínio:** `joaoalcantara.dev` registrado no Cloudflare Registrar, com renovação automática, e ligado ao Worker como *Custom Domain* (DNS e certificado criados pela Cloudflare).
+- **`www`:** registro `AAAA www 100::` com proxy ligado e uma *Redirect Rule* (`https://www.*` → `https://${1}`, 301, preservando a query string). O registro só existe para o `www` passar pela Cloudflare e a regra redirecionar.
+- **HTTPS:** *Always Use HTTPS* ligado. Todo o TLD `.dev` está na lista de pré-carregamento HSTS dos navegadores, então o site só abre por HTTPS de qualquer forma; a opção cobre clientes que não usam essa lista, como o `curl`.
 
 ## Como adicionar um projeto
 
