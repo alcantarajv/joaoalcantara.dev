@@ -1,0 +1,8 @@
+# Cabeçalhos HTTP aplicados pela Cloudflare aos arquivos de dist/.
+#
+# Tudo em /_astro/ (fontes, e o que mais o Astro gerar ali) tem um hash no nome do arquivo:
+# se o conteúdo mudar, o nome muda. Por isso pode ficar em cache por um ano sem o navegador
+# perguntar de novo ao servidor. Os HTML não entram aqui: continuam revalidando a cada visita,
+# para que uma alteração no site apareça na hora.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
