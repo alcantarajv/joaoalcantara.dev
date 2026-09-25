@@ -1,0 +1,24 @@
+// Configuração do Worker na Cloudflare. O site é só estático: não há código de servidor,
+// apenas os arquivos de dist/ servidos pela rede da Cloudflare (Workers Static Assets).
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+
+	// Precisa ser igual ao nome do Worker no painel da Cloudflare, senão o Workers Builds falha.
+	// Também vira o endereço provisório: joaoalcantara-dev.<seu-subdominio>.workers.dev
+	"name": "joaoalcantara-dev",
+
+	// Versão do runtime da Cloudflare com que o Worker foi testado.
+	"compatibility_date": "2026-09-23",
+
+	"assets": {
+		// Saída do "npm run build".
+		"directory": "./dist",
+
+		// /projetos/x serve projetos/x.html; /projetos/x/ e /projetos/x.html redirecionam
+		// para /projetos/x. É o que casa com o canonical sem barra final (build.format 'file').
+		"html_handling": "auto-trailing-slash",
+
+		// Caminho inexistente responde 404 com o conteúdo de dist/404.html.
+		"not_found_handling": "404-page"
+	}
+}

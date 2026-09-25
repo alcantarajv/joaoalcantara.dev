@@ -29,11 +29,15 @@ npm install
 npm run dev       # servidor local em http://localhost:4321
 npm run check     # verificação de tipos (TypeScript estrito)
 npm run build     # gera o site estático em dist/
-npm run preview   # serve o conteúdo de dist/ localmente
+npm run preview   # serve dist/ em http://localhost:8787 com as regras do Cloudflare (wrangler dev)
 npm run links     # verifica links quebrados em dist/ (rode depois do build)
 ```
 
 O CI (GitHub Actions) roda `npm ci`, `check`, `build` e `links` a cada push na `main`, em pull requests e uma vez por semana.
+
+## Deploy
+
+O site é publicado no Cloudflare Workers (static assets) pelo **Workers Builds**: cada push na `main` gera o build (`npm run build`) e publica `dist/` (`npx wrangler deploy`), sem token no repositório. A configuração do Worker está em `wrangler.jsonc`, e a versão do Node em `.node-version`, lida tanto pelo CI quanto pelo Workers Builds.
 
 ## Como adicionar um projeto
 

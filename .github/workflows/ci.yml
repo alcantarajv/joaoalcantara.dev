@@ -29,10 +29,12 @@ jobs:
       - name: Baixar o código
         uses: actions/checkout@v7
 
-      - name: Instalar Node 24 (LTS)
+      # A versão vem de .node-version, o mesmo arquivo que o Workers Builds lê:
+      # CI e deploy usam sempre o mesmo Node.
+      - name: Instalar Node
         uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version-file: .node-version
           cache: npm
 
       # npm ci instala exatamente o que está no package-lock.json e falha se ele

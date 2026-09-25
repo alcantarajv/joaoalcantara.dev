@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "wrangler dev",
     "check": "astro check",
     "links": "linkinator dist --config linkinator.config.mjs",
     "astro": "astro"
@@ -27,6 +27,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "linkinator": "^8.1.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "wrangler": "^4.139.0"
   }
 }
