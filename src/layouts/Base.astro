@@ -11,7 +11,7 @@ import '../styles/global.css';
 
 import TopBar from '../components/TopBar.astro';
 import Footer from '../components/Footer.astro';
-import { NOME } from '../consts';
+import { CF_WEB_ANALYTICS_TOKEN, NOME } from '../consts';
 
 interface Props {
 	title: string;
@@ -32,6 +32,10 @@ const caminho = Astro.url.pathname
 	.replace(/\/$/, '');
 const canonical = new URL(caminho || '/', Astro.site).href.replace(/\/$/, '');
 const imagem = new URL('/og.png', Astro.site).href;
+
+// O script de métricas só entra no build de produção e com um token no formato certo
+// (32 caracteres hexadecimais), para um valor provisório nunca chegar ao site no ar.
+const comMetricas = import.meta.env.PROD && /^[0-9a-f]{32}$/.test(CF_WEB_ANALYTICS_TOKEN);
 ---
 
 <!doctype html>
@@ -87,5 +91,21 @@ const imagem = new URL('/og.png', Astro.site).href;
 			<slot />
 		</main>
 		<Footer />
+
+		{/*
+			Cloudflare Web Analytics: contagem de visitas sem cookies (sem banner de consentimento).
+			Fora do "npm run dev", para que o desenvolvimento local não conte como visita.
+			O token é público por natureza: ele fica visível no HTML de qualquer site que usa o serviço.
+		*/}
+		{
+			comMetricas && (
+				<script
+					is:inline
+					defer
+					src="https://static.cloudflareinsights.com/beacon.min.js"
+					data-cf-beacon={JSON.stringify({ token: CF_WEB_ANALYTICS_TOKEN })}
+				/>
+			)
+		}
 	</body>
 </html>
